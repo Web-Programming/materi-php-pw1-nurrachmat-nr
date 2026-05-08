@@ -27,3 +27,9 @@ Route::get('/biodata/{nama}/{npm}', function ($nama, $npm) {
 use App\Http\Controllers\BarangController;
 //Route::get("/barang", BarangController::class ."@index");
 Route::get("/barang", [BarangController::class, "index"]);
+Route::get("/barang/create", [BarangController::class, "create"]);
+//
+//
+//
+//
+//

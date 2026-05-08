@@ -18,4 +18,19 @@ class BarangController extends Controller
             ]
         );
     }
+
+    function create(){
+        return view("barang.create", ['title' => 'Tambah Barang']);
+    }
+    
+    //detail/show
+
+    //edit
+
+    //update
+
+    //save
+
+    //delete
+   
 }
