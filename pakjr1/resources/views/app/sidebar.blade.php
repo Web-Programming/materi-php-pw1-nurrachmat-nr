@@ -2,21 +2,27 @@
     <div class="position-sticky pt-3">
     <ul class="nav flex-column">
         <li class="nav-item">
-        <a class="nav-link active" aria-current="page" href="#">
-            <span data-feather="home"></span>
+        <a class="nav-link {{ request()->is('/') ? 'active' : '' }}" aria-current="page" href="/">
+            <i class="bi bi-house-door me-2"></i>
             Dashboard
         </a>
         </li>
         <li class="nav-item">
         <a class="nav-link" href="#">
-            <span data-feather="file"></span>
+            <i class="bi bi-receipt me-2"></i>
             Pesanan
         </a>
         </li>
         <li class="nav-item">
-        <a class="nav-link" href="#">
-            <span data-feather="shopping-cart"></span>
-            Barang
+        <a class="nav-link {{ request()->is('barang') ? 'active' : '' }}" href="{{ url('/barang') }}">
+            <i class="bi bi-box-seam me-2"></i>
+            Data Barang
+        </a>
+        </li>
+        <li class="nav-item">
+        <a class="nav-link {{ request()->is('barang/create') ? 'active' : '' }}" href="{{ url('/barang/create') }}">
+            <i class="bi bi-plus-square me-2"></i>
+            Tambah Barang
         </a>
         </li>
     </ul>
@@ -24,13 +30,13 @@
     <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
         <span>Laporan</span>
         <a class="link-secondary" href="#" aria-label="Add a new report">
-        <span data-feather="plus-circle"></span>
+        <i class="bi bi-plus-circle"></i>
         </a>
     </h6>
     <ul class="nav flex-column mb-2">
         <li class="nav-item">
         <a class="nav-link" href="#">
-            <span data-feather="file-text"></span>
+            <i class="bi bi-file-earmark-text me-2"></i>
             Bulan ini
         </a>
         </li>

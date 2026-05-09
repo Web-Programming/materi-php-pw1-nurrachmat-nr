@@ -19,4 +19,4 @@ output : namafolder/namaview.blade.php
 ``php artisan make:seeder BarangSeeder``
 
 7. Menjalanka Seeder
-``php artisan db:seed class="BarangSeeder"``
+``php artisan db:seed --class="BarangSeeder"``

@@ -24,13 +24,61 @@ class BarangController extends Controller
     }
     
     //detail/show
+    function show($id){
+        $barang = Barang::findOrFail($id);
+        return view("barang.detail", [
+            'title' => 'Detail Barang',
+            'barang' => $barang
+        ]);
+    }
 
     //edit
+    function edit($id){
+        $barang = Barang::findOrFail($id);
+
+        return view("barang.edit", [
+            'title' => 'Edit Barang',
+            'barang' => $barang,
+        ]);
+    }
 
     //update
+    function update(Request $request, $id){
+        $validated = $request->validate([
+            'nama_barang' => 'required|string|max:50',
+            'jumlah' => 'required|integer|min:0',
+            'status' => 'required|boolean',
+            'harga' => 'required|numeric|min:0',
+            'tgl_input' => 'nullable|date',
+        ]);
 
-    //save
+        $barang = Barang::findOrFail($id);
+        $barang->update($validated);
+
+        return redirect('/barang')->with('success', 'Data barang berhasil diperbarui.');
+    }
+
+    //store
+    function store(Request $request){
+        $validated = $request->validate([
+            'nama_barang' => 'required|string|max:50',
+            'jumlah' => 'required|integer|min:0',
+            'status' => 'required|boolean',
+            'harga' => 'required|numeric|min:0',
+            'tgl_input' => 'nullable|date',
+        ]);
+
+        Barang::insert($validated);
+
+        return redirect('/barang')->with('success', 'Data barang berhasil ditambahkan.');
+    }
 
     //delete
+    function destroy($id){
+        $barang = Barang::findOrFail($id);
+        $barang->delete();
+
+        return redirect('/barang')->with('success', 'Data barang berhasil dihapus.');
+    }
    
 }
