@@ -25,6 +25,8 @@ Route::get('/biodata/{nama}/{npm}', function ($nama, $npm) {
 });
 
 use App\Http\Controllers\BarangController;
+use App\Http\Controllers\CustomerController;
+
 //Route::get("/barang", BarangController::class ."@index");
 Route::get("/barang", [BarangController::class, "index"]);
 Route::get("/barang/create", [BarangController::class, "create"]);
@@ -33,3 +35,6 @@ Route::get("/barang/edit/{id}", [BarangController::class, "edit"]);
 Route::post("/barang", [BarangController::class, "store"]);
 Route::put("/barang/update/{id}", [BarangController::class, "update"]);
 Route::delete("/barang/{id}", [BarangController::class, "destroy"]);
+
+
+Route::resource("customer", CustomerController::class);

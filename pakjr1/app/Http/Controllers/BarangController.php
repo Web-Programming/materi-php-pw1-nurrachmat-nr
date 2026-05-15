@@ -18,10 +18,6 @@ class BarangController extends Controller
             ]
         );
     }
-
-    function create(){
-        return view("barang.create", ['title' => 'Tambah Barang']);
-    }
     
     //detail/show
     function show($id){
@@ -30,6 +26,27 @@ class BarangController extends Controller
             'title' => 'Detail Barang',
             'barang' => $barang
         ]);
+    }
+
+    //create
+    function create(){
+        return view("barang.create", ['title' => 'Tambah Barang']);
+    }
+
+
+    //store
+    function store(Request $request){
+        $validated = $request->validate([
+            'nama_barang' => 'required|string|max:50',
+            'jumlah' => 'required|integer|min:0',
+            'status' => 'required|boolean',
+            'harga' => 'required|numeric|min:0',
+            'tgl_input' => 'nullable|date',
+        ]);
+
+        Barang::insert($validated);
+
+        return redirect('/barang')->with('success', 'Data barang berhasil ditambahkan.');
     }
 
     //edit
@@ -56,21 +73,6 @@ class BarangController extends Controller
         $barang->update($validated);
 
         return redirect('/barang')->with('success', 'Data barang berhasil diperbarui.');
-    }
-
-    //store
-    function store(Request $request){
-        $validated = $request->validate([
-            'nama_barang' => 'required|string|max:50',
-            'jumlah' => 'required|integer|min:0',
-            'status' => 'required|boolean',
-            'harga' => 'required|numeric|min:0',
-            'tgl_input' => 'nullable|date',
-        ]);
-
-        Barang::insert($validated);
-
-        return redirect('/barang')->with('success', 'Data barang berhasil ditambahkan.');
     }
 
     //delete
