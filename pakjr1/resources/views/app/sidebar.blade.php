@@ -2,7 +2,7 @@
     <div class="position-sticky pt-3">
     <ul class="nav flex-column">
         <li class="nav-item">
-        <a class="nav-link {{ request()->is('/') ? 'active' : '' }}" aria-current="page" href="/">
+        <a class="nav-link {{ request()->is('dashboard') ? 'active' : '' }}" aria-current="page" href="{{ url('/dashboard') }}">
             <i class="bi bi-house-door me-2"></i>
             Dashboard
         </a>

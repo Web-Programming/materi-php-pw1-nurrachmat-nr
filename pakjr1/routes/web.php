@@ -2,39 +2,55 @@
 
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\BarangController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
+// ==================== HOME ====================
 
 Route::get('/', function () {
-    echo "Hello Dina";
+    return view('home');
+})->name('home');
+
+// ==================== ROUTE AUTHENTIKASI ====================
+
+// Tampilkan form register
+Route::get('/register', [AuthController::class, 'registerForm'])
+    ->name('register')
+    ->middleware('guest'); // hanya bisa diakses jika BELUM login
+
+// Proses simpan register
+Route::post('/register', [AuthController::class, 'register'])
+    ->middleware('guest');
+
+// Tampilkan form login
+Route::get('/login', [AuthController::class, 'loginForm'])
+    ->name('login')          // nama route ini WAJIB 'login' agar middleware auth berfungsi
+    ->middleware('guest');
+
+// Proses login
+Route::post('/login', [AuthController::class, 'login'])
+    ->middleware('guest');
+
+// Proses logout (gunakan POST untuk keamanan, bukan GET)
+Route::post('/logout', [AuthController::class, 'logout'])
+    ->name('logout')
+    ->middleware('auth');   // hanya bisa diakses jika SUDAH login
+
+
+// ==================== ROUTE YANG DILINDUNGI ====================
+
+// Semua route di dalam group ini hanya bisa diakses jika sudah login
+Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/barang', [BarangController::class, 'index']);
+    Route::get('/barang/create', [BarangController::class, 'create']);
+    Route::get('/barang/{id}', [BarangController::class, 'show']);
+    Route::get('/barang/edit/{id}', [BarangController::class, 'edit']);
+    Route::post('/barang', [BarangController::class, 'store']);
+    Route::put('/barang/update/{id}', [BarangController::class, 'update']);
+    Route::delete('/barang/{id}', [BarangController::class, 'destroy']);
+
+    //Daftarkan Route Lainnya di Sini : 
+    // - Route Supplier
 });
-
-//Buat halaman profil
-Route::get('/profil', function () {
-    echo "Nama : Dina Salsabila <br>";
-    echo "NPM : 123456789 <br>";
-});
-
-//Route dengan parameter
-//Test dengan mengakses http://pakjr1.test/biodata/Enzo/123456789
-Route::get('/biodata/{nama}/{npm}', function ($nama, $npm) {
-    echo "Nama : " . $nama . "<br>";
-    echo "NPM : " . $npm . "<br>";
-});
-
-use App\Http\Controllers\BarangController;
-use App\Http\Controllers\CustomerController;
-
-//Route::get("/barang", BarangController::class ."@index");
-Route::get("/barang", [BarangController::class, "index"]);
-Route::get("/barang/create", [BarangController::class, "create"]);
-Route::get("/barang/{id}", [BarangController::class, "show"]);
-Route::get("/barang/edit/{id}", [BarangController::class, "edit"]);
-Route::post("/barang", [BarangController::class, "store"]);
-Route::put("/barang/update/{id}", [BarangController::class, "update"]);
-Route::delete("/barang/{id}", [BarangController::class, "destroy"]);
-
-
-Route::resource("customer", CustomerController::class);
