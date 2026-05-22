@@ -63,22 +63,22 @@ class AuthServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // Gate untuk mengecek apakah user adalah admin
-        Gate::define('manage-products', function (User $user) {
+        Gate::define('manage-barang', function (User $user) {
             return $user->role === 'admin';
         });
 
-        // Gate untuk update product (bisa admin atau owner)
-        Gate::define('update-product', function (User $user, Product $product) {
-            return $user->role === 'admin' || $user->id === $product->user_id;
+        // Gate untuk update barang (bisa admin atau owner)
+        Gate::define('update-barang', function (User $user, Barang $barang) {
+            return $user->role === 'admin' || $user->id === $barang->user_id;
         });
 
-        // Gate untuk delete product (hanya admin)
-        Gate::define('delete-product', function (User $user, Product $product) {
+        // Gate untuk delete barang (hanya admin)
+        Gate::define('delete-barang', function (User $user, Barang $barang) {
             return $user->role === 'admin';
         });
 
-        // Gate untuk create product (user yang sudah login)
-        Gate::define('create-product', function (User $user) {
+        // Gate untuk create barang (user yang sudah login)
+        Gate::define('create-barang', function (User $user) {
             return $user !== null;
         });
     }
@@ -87,49 +87,87 @@ class AuthServiceProvider extends ServiceProvider
 
 ### Langkah 2: Menggunakan Gates di Controller
 
-Edit `ProductController.php`:
+Edit `BarangController.php`:
 
 ```php
 use Illuminate\Support\Facades\Gate;
 
-public function create()
-{
+//detail/show
+function show($id){
+    $barang = Barang::findOrFail($id);
+    return view("barang.detail", [
+        'title' => 'Detail Barang',
+        'barang' => $barang
+    ]);
+}
+
+//create
+function create(){
     // Cek authorization menggunakan Gate
-    Gate::authorize('create-product');
-    
-    $title = "Tambah Produk";
-    return view('produk.create', compact('title'));
+    Gate::authorize('create-barang');
+    return view("barang.create", ['title' => 'Tambah Barang']);
 }
 
-public function edit(string $id)
-{
-    $product = Product::findOrFail($id);
-    
-    // Cek authorization dengan parameter
-    Gate::authorize('update-product', $product);
-    
-    $title = "Edit Produk";
-    return view('produk.edit', compact('product', 'title'));
+
+//store
+function store(Request $request){
+    // Cek authorization menggunakan Gate
+    Gate::authorize('create-barang');
+    $validated = $request->validate([
+        'nama_barang' => 'required|string|max:50',
+        'jumlah' => 'required|integer|min:0',
+        'status' => 'required|boolean',
+        'harga' => 'required|numeric|min:0',
+        'tgl_input' => 'nullable|date',
+    ]);
+
+    Barang::insert($validated);
+
+    return redirect('/barang')->with('success', 'Data barang berhasil ditambahkan.');
 }
 
-public function destroy(string $id)
-{
-    $product = Product::findOrFail($id);
-    
-    Gate::authorize('delete-product', $product);
-    
-    $product->delete();
-    return redirect()->route('produk.index')
-        ->with('success', 'Produk berhasil dihapus.');
+//edit
+function edit($id){
+    Gate::authorize('update-barang', $product);
+    $barang = Barang::findOrFail($id);
+
+    return view("barang.edit", [
+        'title' => 'Edit Barang',
+        'barang' => $barang,
+    ]);
+}
+
+//update
+function update(Request $request, $id){
+    Gate::authorize('update-barang', $product);
+    $validated = $request->validate([
+        'nama_barang' => 'required|string|max:50',
+        'jumlah' => 'required|integer|min:0',
+        'status' => 'required|boolean',
+        'harga' => 'required|numeric|min:0',
+        'tgl_input' => 'nullable|date',
+    ]);
+
+    $barang = Barang::findOrFail($id);
+    $barang->update($validated);
+
+    return redirect('/barang')->with('success', 'Data barang berhasil diperbarui.');
+}
+
+//delete
+function destroy($id){
+    $barang = Barang::findOrFail($id);
+    Gate::authorize('delete-barang', $product);
+    $barang->delete();
+    return redirect('/barang')->with('success', 'Data barang berhasil dihapus.');
 }
 ```
 
 ### Langkah 3: Menggunakan Gates di Blade Template
 
-Edit view `produk/index.blade.php`(BAGIANN @section('content')):
+Edit view `barang/index.blade.php`(BAGIAN @section('content')):
 
 ```blade
-
 @section('content')
 <div class="d-flex justify-content-between align-items-center mt-4 mb-3">
     <h1>{{ $title }}</h1>
