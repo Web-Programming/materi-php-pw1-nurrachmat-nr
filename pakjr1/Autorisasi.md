@@ -22,7 +22,7 @@ Edit migration:
 public function up()
 {
     Schema::table('users', function (Blueprint $table) {
-        $table->string('role')->default('user'); // admin, user, editor, dll
+        $table->string('role')->default('user'); // admin, user, sales, dll
     });
 }
 ```
@@ -67,9 +67,9 @@ class AuthServiceProvider extends ServiceProvider
             return $user->role === 'admin';
         });
 
-        // Gate untuk update barang (bisa admin atau owner)
+        // Gate untuk update barang (bisa admin atau sales)
         Gate::define('update-barang', function (User $user, Barang $barang) {
-            return $user->role === 'admin' || $user->id === $barang->user_id;
+            return $user->role === 'admin' || $user->role === 'sales' ;
         });
 
         // Gate untuk delete barang (hanya admin)
