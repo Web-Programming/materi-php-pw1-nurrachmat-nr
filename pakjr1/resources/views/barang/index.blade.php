@@ -7,7 +7,10 @@
 @section('content')
     <div class="d-flex justify-content-between align-items-center mt-4 mb-3">
         <h1>{{ $title }}</h1>
-        <a href="{{ url('/barang/create') }}" class="btn btn-primary">Tambah Barang</a>
+
+        @can('create-barang')
+            <a href="{{ url('/barang/create') }}" class="btn btn-primary">Tambah Barang</a>
+        @endcan
     </div>
 
     <div class="table-responsive">
@@ -41,12 +44,18 @@
                         <td>
                             <div class="d-flex gap-2">
                                 <a href="{{ url('/barang/' . $item->id) }}" class="btn btn-sm btn-success">Detail</a>
-                                <a href="{{ url('/barang/edit/' . $item->id) }}" class="btn btn-sm btn-warning">Edit</a>
+                                
+                                @can('update-barang', $item)
+                                    <a href="{{ url('/barang/edit/' . $item->id) }}" class="btn btn-sm btn-warning">Edit</a>
+                                @endcan
+
+                                @can('delete-barang', $item)
                                 <form action="{{ url('/barang/' . $item->id) }}" method="POST" onsubmit="return confirmDelete('{{ addslashes($item->nama_barang) }}')">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
                                 </form>
+                                @endcan
                             </div>
                         </td>
                     </tr>

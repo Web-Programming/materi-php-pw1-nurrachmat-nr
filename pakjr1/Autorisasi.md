@@ -172,7 +172,7 @@ Edit view `barang/index.blade.php`(BAGIAN @section('content')):
 <div class="d-flex justify-content-between align-items-center mt-4 mb-3">
     <h1>{{ $title }}</h1>
 
-    @can('create-product')
+    @can('create-barang')
         <a href="{{ url('/barang/create') }}" class="btn btn-primary">Tambah Barang</a>
     @endcan
     
@@ -209,10 +209,10 @@ Edit view `barang/index.blade.php`(BAGIAN @section('content')):
                     <td>
                         <div class="d-flex gap-2">
                             <a href="{{ url('/barang/' . $item->id) }}" class="btn btn-sm btn-success">Detail</a>
-                            @can('update-product', $product)
+                            @can('update-barang', $item)
                             <a href="{{ url('/barang/edit/' . $item->id) }}" class="btn btn-sm btn-warning">Edit</a>
                             @endcan
-                            @can('delete-product', $product)
+                            @can('delete-barang', $item)
                             <form action="{{ url('/barang/' . $item->id) }}" method="POST" onsubmit="return confirmDelete('{{ addslashes($item->nama_barang) }}')">
                                 @csrf
                                 @method('DELETE')
